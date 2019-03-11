@@ -28,14 +28,11 @@ urlTel = 'https://ads.google.com/aw/settings/campaign/search?campaignId=98795004
 urlTelRu49 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1636077101&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
 urlKomRu43 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1620167217&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
 urlKomRu34 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1644471505&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
-xpath_1 = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/material-button/div/span"
-xpath_2 = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/div/div[4]/lazy-plugin/div/dynamic-component/ip-exclusions/material-expansionpanel/div/header/div/div[1]/p"
-xpath_3 = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/div/div[4]/lazy-plugin/div/dynamic-component/ip-exclusions/material-expansionpanel/div/main/div/div/div/div/div[2]/div/div[1]/material-input/div[1]/div[1]/div/div[2]/textarea"
-xpathSave = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/div/div[4]/lazy-plugin/div/dynamic-component/ip-exclusions/material-expansionpanel/div/main/div/material-yes-no-buttons/material-button[1]/material-ripple"
-xpath_5 = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/div/div[4]/lazy-plugin/div/dynamic-component/ip-exclusions/material-expansionpanel/div/header/div/div[2]/div"
-xpathCancel = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/div/div[4]/lazy-plugin/div/dynamic-component/ip-exclusions/material-expansionpanel/div/main/div/material-yes-no-buttons/material-button[2]/material-ripple"
-
-BanedIP = '37.73.217.26'
+xpathSetting =  "//*[@id='cmExtensionPoint-id']//material-button//span"
+xpathTextArea = "//*[@id='cmExtensionPoint-id']//textarea"
+xpathBanIP = "//*[@id='cmExtensionPoint-id']//ip-exclusions/material-expansionpanel"
+xpathSave = "//*[@id='cmExtensionPoint-id']//ip-exclusions/material-expansionpanel//material-yes-no-buttons/material-button[1]/material-ripple"
+xpathCancel = "//*[@id='cmExtensionPoint-id']//ip-exclusions/material-expansionpanel//material-yes-no-buttons/material-button[2]/material-ripple"
 
 def initAndLogin():
     driver.set_window_size(500, 700)
@@ -45,7 +42,7 @@ def initAndLogin():
     elem[0].send_keys(login)
     driver.find_element_by_xpath("//*[@id='identifierNext']/content/span").click()
     time.sleep(2)
-    elem = WebDriverWait(driver, 10).until(lambda driver : driver.find_element_by_xpath("//*[@id='password']/div[1]/div/div[1]/input"))
+    elem = WebDriverWait(driver, 10).until(lambda driver : driver.find_element_by_xpath("//*[@id='password']//input"))
     elem.send_keys(passw)
     time.sleep(2)
     ele = driver.find_element_by_xpath("//*[@id='passwordNext']/content/span").click()
@@ -59,35 +56,35 @@ def initAndLogin():
 def openSetting(URL):
     driver.get(URL)
     try:
-       el = WebDriverWait(driver, 15).until(lambda driver : driver.find_element_by_xpath(xpath_1))
-       print("OK!")
-    except Exception:
+       el = WebDriverWait(driver, 15).until(lambda driver : driver.find_element_by_xpath(xpathSetting))
+       print("open Setting URL OK!")
+    except Exception as e:
         driver.implicitly_wait(20)
-        print("wait")
+        print("wait",e)
     finally:
         print("finaly")
-    print('open Url OK')
+#    print('open Url OK')
     # нажимаем Дополнительные настройки
-    WebDriverWait(driver, 10).until(lambda driver : driver.find_element_by_xpath(xpath_1)).click()
+    WebDriverWait(driver, 10).until(lambda driver : driver.find_element_by_xpath(xpathSetting)).click()
     time.sleep(2)
     # нажимает Исключение IP адресов
-    WebDriverWait(driver, 10).until(lambda driver : driver.find_element_by_xpath(xpath_2)).click()
+    WebDriverWait(driver, 10).until(lambda driver : driver.find_element_by_xpath(xpathBanIP)).click()
     time.sleep(2) # Список IP
-    textArea = WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpath_3))
-    print("add IP 1")
+    textArea = WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathTextArea))
+#    print("add IP 1")
     textArea.send_keys(Keys.ENTER)
-    textArea.send_keys('37.73.241.179')
-    driver.find_element_by_xpath(xpathSave).click()
+#    textArea.send_keys('37.73.241.179')
+    driver.find_element_by_xpath(xpathCancel).click()     #  кликаем Отмена
     print("openSetting()  OK")
 
 def add_Ban_IP():
     # нажимает Исключение IP адресов
-    WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpath_5)).click()
-    textArea = WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpath_3))
+    WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathBanIP)).click()
+    textArea = WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathTextArea))
 #    print("add IP")
-    textArea.send_keys(Keys.ENTER)
-    textArea.send_keys(IP)
-    driver.find_element_by_xpath(xpathSave).click()
+    textArea.send_keys(Keys.ENTER)      #  идём в конец списка
+    textArea.send_keys(IP)               #   вводим IP
+    driver.find_element_by_xpath(xpathSave).click()  #  кликаем Сохранить
 #    print("OK add IP")
 
 def on_message(client, userdata, message):
@@ -129,7 +126,8 @@ def worker():
                 find_url =  str(mydict["url"])
                 br = mycol.find({"brouser" : brouser}, {"repIP" : 1, "repBr": 1, "IP": 1, "date": 1, "time": 1, "brouser": 1 })
                 ip = mycol.find({"IP" : IP}, {"repIP" : 1,  "repBr": 1, "IP": 1, "date": 1, "time": 1, "brouser": 1 })
-                if (find_url.find("gclid") >= 0):   #  gclid
+                request = ['gclid', 'onas']
+                if any(c in find_url for c in request):   #  Если пришел из поиска Гугл gclid
                     q2.put(IP)
                     q2.put(brouser)
                     for x in br:
@@ -150,14 +148,12 @@ def worker():
 
 def worker2():
      initAndLogin()
-     print(1)
+     print("Login OK")
      while worker_flag:
-        print(2)
         try:
-            print(3)
-            driver.switch_to.window(driver.window_handles[0])
-            openSetting(urlTelRu49)
-            driver.switch_to.window(driver.window_handles[1])
+            driver.switch_to.window(driver.window_handles[0])  # вернуться на предыдущую вкладку (с индексом 0)
+            openSetting(urlTel)
+            driver.switch_to.window(driver.window_handles[1])  # переключиться на новую вкладку (с индексом 1)
             openSetting(urlKomRu34)
             while True:
                 while not q2.empty():
@@ -165,39 +161,25 @@ def worker2():
                     brouser = q2.get()
                     mycol_tvremBanedToday.update_one({"IP" : IP}, {"$set": {"IP": IP}}, upsert = True )
                     brouser_str = str(brouser)
-                    if (brouser_str.find("Linux") >= 0):
-                        driver.switch_to.window(driver.window_handles[0])
-                        try:
-                           add_Ban_IP()
-                           print("Linux")
-                           driver.find_element_by_xpath(xpathCancel).click()
-                        except Exception:
-                           print("ER add IP")
-                           driver.find_element_by_xpath(xpathCancel).click()
+                    try:
+                        request = ['Linux', 'iPhone']
+                        if any(c in brouser_str for c in request): #  Если пришел с телефона
+                            driver.switch_to.window(driver.window_handles[0])
+                            add_Ban_IP()
+                            print("Linux")
+                        elif (brouser_str.find("Windows") >= 0):  #  Если пришел с компа
+                            driver.switch_to.window(driver.window_handles[1])
+                            add_Ban_IP()
+                            print("Windows")
+                        else:                  #  Если пришел с ХЗ чего...
+                            print("X3")
+                    except Exception as e:
+                           print("ER add IP", e)
+                           driver.find_element_by_xpath(xpathCancel).click()  #  кликаем Отмена
                            continue
-                    elif (brouser_str.find("iPhone") >= 0):
-                        driver.switch_to.window(driver.window_handles[0])
-                        try:
-                           add_Ban_IP()
-                           print("iPhone")
-                        except Exception:
-                           print("ER add IP")
-                           driver.find_element_by_xpath(xpathCancel).click()
-                           continue
-                    elif (brouser_str.find("Windows") >= 0):
-                        driver.switch_to.window(driver.window_handles[1])
-                        try:
-                           add_Ban_IP()
-                           print("Windows")
-                        except Exception:
-                           print("ER add IP")
-                           driver.find_element_by_xpath(xpathCancel).click()
-                           continue
-                    else:
-                       print("X3")
 
-        except Exception:
-            print(3, 'no_Дополнительные настройки')
+        except Exception as e:
+            print(3, 'no_Дополнительные настройки', e)
 #             driver.quit()
             time.sleep(3)
             continue
@@ -205,8 +187,6 @@ def worker2():
 driver = webdriver.Chrome(executable_path='C:\chromedriver.exe')
 # Открыть новую пустую вкладку
 driver.execute_script("window.open('','_blank');")
-# переключиться на новую вкладку (с индексом 1)
-#driver.switch_to.window(driver.window_handles[1])
 # вернуться на предыдущую вкладку (с индексом 0)
 driver.switch_to.window(driver.window_handles[0])
 
