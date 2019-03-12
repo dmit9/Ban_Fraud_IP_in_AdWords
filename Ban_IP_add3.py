@@ -5,6 +5,7 @@ from selenium import webdriver
 #driver = webdriver.Firefox(executable_path='C:\geckodriver.exe')
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
+from constants import login, passw
 
 url = 'https://accounts.google.com/signin'
 url2 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=98795004&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
@@ -13,8 +14,7 @@ xpath_2 = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loade
 xpath_3 = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/div/div[4]/lazy-plugin/div/dynamic-component/ip-exclusions/material-expansionpanel/div/main/div/div/div/div/div[2]/div/div[1]/material-input/div[1]/div[1]/div/div[2]/textarea"
 xpath_4 = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/div/div[4]/lazy-plugin/div/dynamic-component/ip-exclusions/material-expansionpanel/div/main/div/material-yes-no-buttons/material-button[1]/material-ripple"
 xpath_5 = "//*[@id='cmExtensionPoint-id']/base-root/div/div[2]/div[1]/view-loader/search-campaign-settings-view/div/div/construction-layout/construction-layout-engine/div/div/div[11]/div/div[4]/lazy-plugin/div/dynamic-component/ip-exclusions/material-expansionpanel/div/header/div/div[2]/div"
-login = 'devyatin5@gmail.com'
-passw = 'D89devyatin'
+
 BanedIP = '37.73.217.26'
 
 while True:

@@ -5,12 +5,11 @@ from selenium import webdriver
 #driver = webdriver.Firefox(executable_path='C:\geckodriver.exe')
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
+from constants import login, passw
 
 url = 'https://accounts.google.com/signin'
 url2 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=98795004&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
 
-login = 'devyatin5@gmail.com'
-passw = 'D89devyatin'
 BanedIP = ['109.87.22.101','37.73.217.26']
 
 def autoriz(login):
