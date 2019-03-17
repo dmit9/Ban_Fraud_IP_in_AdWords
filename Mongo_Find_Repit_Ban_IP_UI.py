@@ -4,6 +4,7 @@ import threading
 from queue import Queue
 import datetime
 import time
+from tkinter import *
 from datetime import datetime, timedelta, date, time as dt_time
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,8 +12,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from constants import login, passw
 
+root = Tk()
 q = Queue()
 q2 = Queue()
+q3 = Queue()
 # MQTT Setting
 broker = "192.168.1.231"
 Topics = [("url",0), ("date",0), ("time",0), ("IP",0), ("page",0), ("site",0), ("brouser",0)]
@@ -36,20 +39,6 @@ xpathBanIP = "//*[@id='cmExtensionPoint-id']//ip-exclusions/material-expansionpa
 xpathSave = "//*[@id='cmExtensionPoint-id']//ip-exclusions/material-expansionpanel//material-yes-no-buttons/material-button[1]/material-ripple"
 xpathCancel = "//*[@id='cmExtensionPoint-id']//ip-exclusions/material-expansionpanel//material-yes-no-buttons/material-button[2]/material-ripple"
 
-urlTe = urlTelRu49
-urlKo = urlKomRu39
-
-def initDriver():
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--window-size=800x600")
-    driver = webdriver.Chrome(chrome_options = chrome_options, executable_path = 'C:\chromedriver.exe')
-#    driver = webdriver.Chrome(executable_path = 'C:\chromedriver.exe')
-# Открыть новую пустую вкладку
-    driver.execute_script("window.open('','_blank');")
-# вернуться на предыдущую вкладку (с индексом 0)
-    driver.switch_to.window(driver.window_handles[0])
-
 def initAndLogin():
     driver.set_window_size(500, 700)
     driver.get(urlG)
@@ -58,25 +47,29 @@ def initAndLogin():
     driver.find_element_by_xpath("//*[@id='identifierNext']/content/span").click()
     elem = WebDriverWait(driver, 10).until(lambda driver : driver.find_element_by_xpath("//*[@id='password']//input"))
     elem.send_keys(passw)
-    ele = driver.find_element_by_xpath("//*[@id='passwordNext']/content/span").click()
+    driver.find_element_by_xpath("//*[@id='passwordNext']/content/span").click()
     time.sleep(15)
     e = input("нажми E  ")
     print(e)
     cookie = {'name': 'foo', 'value': 'bar'}
     driver.add_cookie(cookie)
     all_cookies = driver.get_cookies()
-    print("Login OK")
+#    print("Login OK")
+    labelConsole['text'] = "Login OK"
 
 def openSetting(URL):
     driver.get(URL)
     try:
-       el = WebDriverWait(driver, 20).until(lambda driver : driver.find_element_by_xpath(xpathSetting))
-       print("open Setting URL OK!")
+       WebDriverWait(driver, 20).until(lambda driver : driver.find_element_by_xpath(xpathSetting))
+#       print("open Setting URL OK!")
+       labelConsole['text'] = "open Setting URL OK!"
     except Exception as e:
-        print("wait",e)
+#        print("wait",e)
+        labelConsole['text'] = "wait",e
     finally:
         print("finaly")
-#    print('open Url OK')
+        labelConsole['text'] = "finaly"
+    #    print('open Url OK')
     # нажимаем Дополнительные настройки
     WebDriverWait(driver, 15).until(lambda driver : driver.find_element_by_xpath(xpathSetting)).click()
     # нажимает Исключение IP адресов
@@ -90,21 +83,27 @@ def openSetting(URL):
 #    textArea.send_keys('37.73.241.179')
     print(3)
     driver.find_element_by_xpath(xpathCancel).click()     #  кликаем Отмена
-    print("openSetting()  OK")
+    labelConsole['text'] = "openSetting()  OK"
+#    print("openSetting()  OK")
 
 def add_Ban_IP():
+    try:
+        driver.find_element_by_xpath(xpathSave).size['width'] != 0
+        print("Size", driver.find_element_by_xpath(xpathSave).size['width'])
+        driver.find_element_by_xpath(xpathSave).click()
+    except:
+        print("No Size")
     # нажимает Исключение IP адресов
     WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathBanIP)).click()
-    print("click Ban IP")
+#    print("click Ban IP")
     textArea = WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathTextArea))
-    print("finded TextArea")
+#    print("finded TextArea")
     textArea.send_keys(Keys.ENTER)      #  идём в конец списка
     textArea.send_keys(IP)               #   вводим IP
-    print("add IP")
+#    print("add IP")
     WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathSave)).click()  #  кликаем Сохранить
-    print("IP is added")
-    WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathBanIP))
-    print("OK add IP")
+    labelConsole['text'] = "IP is added"
+#    print("IP is added")
 
 def on_message(client, userdata, message):
     if message.topic=="url":
@@ -133,6 +132,9 @@ def on_message(client, userdata, message):
 
 def worker():
     while worker_flag:
+        # if (now.strftime("%H") >= "22"):
+        #     mycol_tvremBanedToday.drop()
+        #     print("mycol_tvremBanedToday  drop")
         while not q.empty():
             mydict = q.get()
             if mydict is None:
@@ -153,27 +155,47 @@ def worker():
                         count_repit_brouser = count_repit_brouser + 1
                         if (count_repit_brouser >= 1):
                             mycol.update_one({"_id" : x["_id"]}, { "$set": {"repBr" : count_repit_brouser}})
-#                            print(x["_id"])
                     for y in ip:
                         count_repit_ip = count_repit_ip + 1
                         if (count_repit_ip >= 1):
                             mycol.update_one({"_id" : y["_id"]}, { "$set": {"repIP" : count_repit_ip}})
-#                        print(y)
                     print(mydict["time"], "  ", brouser)
                     print("Повторов =", count_repit_brouser, "        IP =",  count_repit_ip, IP )
+                    labelIP['text'] = (mydict["time"] + ' Повторов = ' + str(count_repit_brouser) + '    IP = ' + str(count_repit_ip),  str(IP))
+                    labelBrouser['text'] = brouser
             except Exception as e:
                 print("problem with logging ",e)
                 continue
 
 def worker2():
+     urlTe = urlTel
+     urlKo = urlKomRu39
      initAndLogin()
+#     print("init")
+     labelConsole['text'] = "init"
      while worker_flag:
         try:
+            labelConsole['text'] = "tel", urlTe
+            labelConsole['text'] = "ko", urlKo
+#            print("tel", urlTe)
+#            print("ko", urlKo)
             driver.switch_to.window(driver.window_handles[0])  # вернуться на предыдущую вкладку (с индексом 0)
             openSetting(urlTe)
             driver.switch_to.window(driver.window_handles[1])  # переключиться на новую вкладку (с индексом 1)
             openSetting(urlKo)
             while True:
+                if q3.empty() != True:
+                    urlChangeFlag = q3.get()
+                    if (urlChangeFlag == "Tel"):
+                        urlTe = q3.get()
+                        driver.switch_to.window(driver.window_handles[0])  # вернуться на предыдущую вкладку (с индексом 0)
+                        openSetting(urlTe)
+                    elif (urlChangeFlag == "Ko"):
+                        urlKo = q3.get()
+                        driver.switch_to.window(
+                        driver.window_handles[1])  # переключиться на новую вкладку (с индексом 1)
+                        openSetting(urlKo)
+
                 try:
                     while not q2.empty():
                         IP = q2.get()
@@ -184,35 +206,70 @@ def worker2():
                         if any(c in brouser_str for c in request): #  Если пришел с телефона
                             driver.switch_to.window(driver.window_handles[0])
                             add_Ban_IP()
-                            print("Linux")
+ #                           print("Linux")
                         elif (brouser_str.find("Windows") >= 0):  #  Если пришел с компа
                             driver.switch_to.window(driver.window_handles[1])
                             add_Ban_IP()
-                            print("Windows")
+#                           print("Windows")
                         else:                  #  Если пришел с ХЗ чего...
                             print("X3")
                 except Exception as e:
                     print("ER add IP", e)
                     q2.put(IP)
                     q2.put(brouser)
-                    print("break")
+                    labelConsole['text'] = "break"
+#                    print("break")
                     break
 
         except Exception as e:
             print(3, 'no_Дополнительные настройки', e)
 #             driver.quit()
-#            time.sleep(3)
             continue
 
-#chrome_options = Options()
-#chrome_options.add_argument("--headless")
-#chrome_options.add_argument("--window-size=800x600")
-#driver = webdriver.Chrome(chrome_options = chrome_options, executable_path = 'C:\chromedriver.exe')
-#    driver = webdriver.Chrome(executable_path = 'C:\chromedriver.exe')
-# Открыть новую пустую вкладку
-#driver.execute_script("window.open('','_blank');")
-# вернуться на предыдущую вкладку (с индексом 0)
-#driver.switch_to.window(driver.window_handles[0])
+def click_btnTel():
+    btnTel.config(text="Tel_ON")
+    btnTel49.config(text="Tel49")
+    urlTe = urlTel
+    urlChangeFlag = "Tel"
+    q3.put(urlChangeFlag)
+    q3.put(urlTe)
+def click_btnTel49():
+    btnTel49.config(text="Tel49_ON")
+    btnTel.config(text="Tel")
+    urlTe = urlTelRu49
+    urlChangeFlag = "Tel"
+    q3.put(urlChangeFlag)
+    q3.put(urlTe)
+def click_btnKom34():
+    btnKom34.config(text="Kom34_ON")
+    btnKom39.config(text="Kom39")
+    btnKom43.config(text="Kom43")
+    urlKo = urlKomRu34
+    urlChangeFlag = "Ko"
+    q3.put(urlChangeFlag)
+    q3.put(urlKo)
+def click_btnKom39():
+    btnKom39.config(text="Kom39_ON")
+    btnKom34.config(text="Kom34")
+    btnKom43.config(text="Kom43")
+    urlKo = urlKomRu39
+    urlChangeFlag = "Ko"
+    q3.put(urlChangeFlag)
+    q3.put(urlKo)
+def click_btnKom43():
+    btnKom43.config(text="Kom43_ON")
+    btnKom39.config(text="Kom39")
+    btnKom34.config(text="Kom34")
+    urlKo = urlKomRu43
+    urlChangeFlag = "Ko"
+    q3.put(urlChangeFlag)
+    q3.put(urlKo)
+def click_btnLogin():
+    print("E")
+
+def confirmExit():
+    root.quit()
+    root.destroy()
 
 driver = webdriver.Chrome(executable_path = 'C:\chromedriver.exe')
 # Открыть новую пустую вкладку
@@ -222,11 +279,11 @@ driver.switch_to.window(driver.window_handles[0])
 
 t = threading.Thread(target = worker) #start logger
 worker_flag = True
-t.start() #start logging thread
+#t.start() #start logging thread
 
 t2 = threading.Thread(target = worker2)
 worker2_flag = True
-t2.start()
+#t2.start()
 
 client = paho.Client()
 client.on_message = on_message
@@ -234,9 +291,38 @@ client.connect(broker)
 client.subscribe(Topics)
 client.loop_start()
 
+#root = Tk()
+root.title("банер IP")
+root.geometry("800x200+20+800")
+
+btnTel = Button(text="Tel_ON", padx="20", pady="8",command = click_btnTel)
+btnTel.place(x=10, y=5,height=30, width=50)
+btnTel49 = Button(text="Tel49", padx="20", pady="8",command = click_btnTel49)
+btnTel49.place(x=70, y=5,height=30, width=50)
+btnKom34 = Button(text="Kom34_ON", padx="20", pady="8",command = click_btnKom34)
+btnKom34.place(x=140, y=5,height=30, width=50)
+btnKom39 = Button(text="Kom39", padx="20", pady="8",command = click_btnKom39)
+btnKom39.place(x=210, y=5,height=30, width=50)
+btnKom43 = Button(text="Kom43", padx="20", pady="8",command = click_btnKom43)
+btnKom43.place(x=280, y=5,height=30, width=50)
+btnLogin = Button(text="Login", padx="20", pady="18",command = click_btnLogin)
+btnLogin.place(x=500, y=5,height=30, width=50)
+
+labelIP = Label(root,text = "IP")
+labelIP.place(x=10, y=40)
+labelBrouser = Label(root,text = "Brouser")
+labelBrouser.place(x=10, y=60)
+labelConsole = Label(root,text = "Print")
+labelConsole.place(x=10, y=80)
+
+t.start()
+t2.start()
+root.protocol('WM_DELETE_WINDOW', confirmExit)
+root.mainloop()
 try:
     while True:
         pass
 
 except KeyboardInterrupt:
     print("interrrupted by keyboard")
+    root.destroy()

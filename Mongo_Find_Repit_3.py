@@ -58,7 +58,8 @@ def worker():
                 find_url =  str(mydict["url"])
                 br = mycol.find({"brouser" : brouser}, {"repIP" : 1, "repBr": 1, "IP": 1, "date": 1, "time": 1, "brouser": 1 })
                 ip = mycol.find({"IP" : IP}, {"repIP" : 1,  "repBr": 1, "IP": 1, "date": 1, "time": 1, "brouser": 1 })
-                if (find_url.find("gclid") >= 0):
+                request = ['gclid', 'onas']
+                if any(c in find_url for c in request):
                     q2.put(IP)
                     q2.put(brouser)
                     for x in br:
