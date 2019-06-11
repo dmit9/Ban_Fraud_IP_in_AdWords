@@ -17,30 +17,37 @@ root = Tk()
 q = Queue()
 q2 = Queue()
 q3 = Queue()
-    # MQTT Setting
+# MQTT Setting
 broker = "192.168.1.231"
 Topics = [("url",0), ("date",0), ("time",0), ("IP",0), ("page",0), ("site",0), ("brouser",0)]
-    # Mongo Setting
+# Mongo Setting
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydatabase = myclient["tvremont"]
 mycol = mydatabase["tvrem"]
 mycol_tvremNotGoogl = mydatabase["tvremNotGoogl"]
 mycol_tvremBanedForever = mydatabase["tvremBanedForever"]
 mycol_tvremBanedToday = mydatabase["tvremBanedToday"]
-    # Goodl Setting
+# Goodl Setting
 urlLogin = 'https://accounts.google.com/signin'
 urlCompany = "https://ads.google.com/aw/campaigns?ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001"
 urlTel = 'https://ads.google.com/aw/settings/campaign/search?campaignId=98795004&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
 urlTelRu = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1699363337&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
 urlTelRu49 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1636077101&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
-urlTelOpt49 = "https://ads.google.com/aw/settings/campaign/search?campaignId=1740531111&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001"
-urlTelOpt34 = "https://ads.google.com/aw/settings/campaign/search?campaignId=1742888292&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001"
+urlTelRu39 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=2001143663&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
+urlTelOpt39 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1825915186&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
+urlTelOpt49 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1740531111&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
+urlTelOpt34 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1742888292&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
 urlKomRu43 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1620167217&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
-urlKomRu39 = "https://ads.google.com/aw/settings/campaign/search?campaignId=1735226790&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001"
-urlKomOpt39 = "https://ads.google.com/aw/settings/campaign/search?campaignId=1643384377&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001"
+urlKomRu39 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1735226790&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
+urlKomOpt39 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1643384377&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
 urlKomRu34 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1644471505&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
-urlTelDict = {'телеф_34_опт': urlTelOpt34, 'телеф_49_опт': urlTelOpt49, 'телеф_49_ручн': urlTelRu49, 'телеф': urlTel, 'телеф_ручн': urlTelRu}
-urlKomDict = {'комп_34_ручн': urlKomRu34, 'комп_39_ручн': urlKomRu39, 'комп_43_ручн': urlKomRu43, 'комп_39_ опт': urlKomOpt39}
+urlKomOpt34 = 'https://ads.google.com/aw/settings/campaign/search?campaignId=1619439315&ocid=64763724&__c=3808221676&__u=4249769236&authuser=0&__o=cues&lang=uk&loc=21125&device=30001'
+urlTelDict = {'телеф_34_опт': urlTelOpt34, 'телеф_49_опт': urlTelOpt49, 'телеф_39_опт': urlTelOpt39,'телеф_49_ручн': urlTelRu49,'телеф_39_ручн': urlTelRu39, 'телеф': urlTel, 'телеф_ручн': urlTelRu}
+urlKomDict = {'комп_34_ручн': urlKomRu34, 'комп_34_опт': urlKomOpt34, 'комп_39_ручн': urlKomRu39, 'комп_43_ручн': urlKomRu43, 'комп_39_ опт': urlKomOpt39}
+xpathLogEmail = "//*[@id='Email']"
+xpathLogEmailBtn = "//*[@id='next']"
+xpathLogPassw = "//*[@id='Passwd']"
+xpathLogPasswBtn = "//*[@id='signIn']"
 xpathSetting =  "//*[@id='cmExtensionPoint-id']//material-button//span"
 xpathTextArea = "//*[@id='cmExtensionPoint-id']//textarea"
 xpathBanIP = "//*[@id='cmExtensionPoint-id']//ip-exclusions/material-expansionpanel"
@@ -57,11 +64,13 @@ def initAndLogin():
     driver.get(urlLogin)
     elem = WebDriverWait(driver, 10).until(lambda driver : driver.find_elements_by_id("identifierId"))
     elem[0].send_keys(login)
-    driver.find_element_by_xpath("//*[@id='identifierNext']/content/span").click()
+#    driver.find_element_by_xpath("//*[@id='identifierNext']/content/span").click()
+    driver.find_element_by_xpath("// *[ @ id = 'identifierNext'] / span / span").click()
     time.sleep(4)
     elem = WebDriverWait(driver, 10).until(lambda driver : driver.find_element_by_xpath("//*[@id='password']//input"))
     elem.send_keys(passw)
-    driver.find_element_by_xpath("//*[@id='passwordNext']/content/span").click()
+#    driver.find_element_by_xpath("//*[@id='passwordNext']/content/span").click()
+    driver.find_element_by_xpath("// *[ @ id = 'passwordNext'] / span / span").click()
     time.sleep(25)
     # while inputValue != 1:
     #     labelConsole['text'] = "Нажми Login"
@@ -184,10 +193,10 @@ def worker():   # обработка пришедших с сервера дан
                 count_repit_ip = 0
                 brouser = mydict["brouser"]
                 IP = mydict["IP"]
-                find_url =  str(mydict["url"])
+                find_url = str(mydict["url"])
                 br = mycol.find({"brouser" : brouser}, {"repIP" : 1, "repBr": 1, "IP": 1, "date": 1, "time": 1, "brouser": 1 })
                 ip = mycol.find({"IP" : IP}, {"repIP" : 1,  "repBr": 1, "IP": 1, "date": 1, "time": 1, "brouser": 1 })
-                request = ['gclid', 'onas']
+                request = ['gclid'] # , 'onas'
                 if any(c in find_url for c in request):   #  Если пришел из поиска Гугл gclid
                     q2.put(IP)      # передаём в очередь для worker2
                     q2.put(brouser)
@@ -211,8 +220,8 @@ def worker2():  # работа с браузером
      initAndLogin()
      driver.switch_to.window(driver.window_handles[1])
      driver.get(urlCompany)
-     row1 = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath(xpathTableRow1))
-     row2 = WebDriverWait(driver, 15).until(lambda driver: driver.find_element_by_xpath(xpathTableRow2))
+     row1 = WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathTableRow1))
+     row2 = WebDriverWait(driver, 10).until(lambda driver: driver.find_element_by_xpath(xpathTableRow2))
      rows = [row1, row2]
      for row in rows:
          for key in urlKomDict:
@@ -279,6 +288,8 @@ def worker2():  # работа с браузером
 def click_btnTel():         #  Если нажали кнопку
     btnTel.config(fg="red")     # меняем цвет текста
     btnTelRu.config(fg="black")
+    btnTelOpt39.config(fg="black")
+    btnTel39.config(fg="black")
     btnTel49.config(fg="black")
     btnTelOpt49.config(fg="black")
     btnTelOpt34.config(fg="black")
@@ -289,6 +300,8 @@ def click_btnTel():         #  Если нажали кнопку
 def click_btnTelRu():
     btnTelRu.config(fg="red")
     btnTel.config(fg="black")
+    btnTelOpt39.config(fg="black")
+    btnTel39.config(fg="black")
     btnTel49.config(fg="black")
     btnTelOpt49.config(fg="black")
     btnTelOpt34.config(fg="black")
@@ -299,6 +312,8 @@ def click_btnTelRu():
 def click_btnTel49():
     btnTel49.config(fg="red")
     btnTelOpt49.config(fg="black")
+    btnTelOpt39.config(fg="black")
+    btnTel39.config(fg="black")
     btnTelRu.config(fg="black")
     btnTel.config(fg="black")
     btnTelOpt34.config(fg="black")
@@ -306,8 +321,22 @@ def click_btnTel49():
     urlChangeFlag = "Tel"
     q3.put(urlChangeFlag)
     q3.put(urlTe)
+def click_btnTel39():
+    btnTel39.config(fg="red")
+    btnTel49.config(fg="black")
+    btnTelOpt49.config(fg="black")
+    btnTelOpt39.config(fg="black")
+    btnTelRu.config(fg="black")
+    btnTel.config(fg="black")
+    btnTelOpt34.config(fg="black")
+    urlTe = urlTelRu39
+    urlChangeFlag = "Tel"
+    q3.put(urlChangeFlag)
+    q3.put(urlTe)
 def click_btnTelOpt49():
     btnTelOpt49.config(fg="red")
+    btnTelOpt39.config(fg="black")
+    btnTel39.config(fg="black")
     btnTelRu.config(fg="black")
     btnTel49.config(fg="black")
     btnTel.config(fg="black")
@@ -316,9 +345,23 @@ def click_btnTelOpt49():
     urlChangeFlag = "Tel"
     q3.put(urlChangeFlag)
     q3.put(urlTe)
+def click_btnTelOpt39():
+    btnTelOpt39.config(fg="red")
+    btnTel39.config(fg="black")
+    btnTelOpt49.config(fg="black")
+    btnTelRu.config(fg="black")
+    btnTel49.config(fg="black")
+    btnTel.config(fg="black")
+    btnTelOpt34.config(fg="black")
+    urlTe = urlTelOpt39
+    urlChangeFlag = "Tel"
+    q3.put(urlChangeFlag)
+    q3.put(urlTe)
 def click_btnTelOpt34():
     btnTelOpt34.config(fg="red")
     btnTelRu.config(fg="black")
+    btnTelOpt39.config(fg="black")
+    btnTel39.config(fg="black")
     btnTelOpt49.config(fg="black")
     btnTel49.config(fg="black")
     btnTel.config(fg="black")
@@ -328,6 +371,7 @@ def click_btnTelOpt34():
     q3.put(urlTe)
 def click_btnKom34():
     btnKom34.config(fg="red")
+    btnKomOpt34.config(fg="black")
     btnKom39.config(fg="black")
     btnKomOpt39.config(fg="black")
     btnKom43.config(fg="black")
@@ -335,10 +379,21 @@ def click_btnKom34():
     urlChangeFlag = "Ko"
     q3.put(urlChangeFlag)
     q3.put(urlKo)
+def click_btnKomOpt34():
+    btnKomOpt34.config(fg="red")
+    btnKom34.config(fg="black")
+    btnKom39.config(fg="black")
+    btnKomOpt39.config(fg="black")
+    btnKom43.config(fg="black")
+    urlKo = urlKomOpt34
+    urlChangeFlag = "Ko"
+    q3.put(urlChangeFlag)
+    q3.put(urlKo)
 def click_btnKom39():
     btnKom39.config(fg="red")
     btnKomOpt39.config(fg="black")
     btnKom34.config(fg="black")
+    btnKomOpt34.config(fg="black")
     btnKom43.config(fg="black")
     urlKo = urlKomRu39
     urlChangeFlag = "Ko"
@@ -348,6 +403,7 @@ def click_btnKomOpt39():
     btnKomOpt39.config(fg="red")
     btnKom39.config(fg="black")
     btnKom34.config(fg="black")
+    btnKomOpt34.config(fg="black")
     btnKom43.config(fg="black")
     urlKo = urlKomOpt39
     urlChangeFlag = "Ko"
@@ -358,11 +414,12 @@ def click_btnKom43():
     btnKom39.config(fg="black")
     btnKomOpt39.config(fg="black")
     btnKom34.config(fg="black")
+    btnKomOpt34.config(fg="black")
     urlKo = urlKomRu43
     urlChangeFlag = "Ko"
     q3.put(urlChangeFlag)
     q3.put(urlKo)
-inputValue = 0
+
 def click_btnLogin():
     global inputValue
     inputValue = 1
@@ -399,7 +456,7 @@ client.subscribe(Topics)
 client.loop_start()
 
 #root = Tk()
-root.title("банер IP")
+root.title("банер по IP")
 root.geometry("1200x150+20+800")
 
 btnTel = Button(text="Tel", padx="20", pady="8",command = click_btnTel)
@@ -410,18 +467,24 @@ btnTel49 = Button(text="Tel49", padx="20", pady="8",command = click_btnTel49)
 btnTel49.place(x=140, y=5,height=30, width=50)
 btnTelOpt49 = Button(text="TelOp49", padx="20", pady="8",command = click_btnTelOpt49)
 btnTelOpt49.place(x=210, y=5,height=30, width=50)
+btnTel39 = Button(text="Tel39", padx="20", pady="8",command = click_btnTel39)
+btnTel39.place(x=280, y=5,height=30, width=50)
+btnTelOpt39 = Button(text="TelOp39", padx="20", pady="8",command = click_btnTelOpt39)
+btnTelOpt39.place(x=350, y=5,height=30, width=50)
 btnTelOpt34 = Button(text="TelOp34", padx="20", pady="8",command = click_btnTelOpt34)
-btnTelOpt34.place(x=280, y=5,height=30, width=50)
+btnTelOpt34.place(x=420, y=5,height=30, width=50)
 btnKom34 = Button(text="Kom34", padx="20", pady="8",command = click_btnKom34)
-btnKom34.place(x=350, y=5,height=30, width=50)
+btnKom34.place(x=490, y=5,height=30, width=50)
+btnKomOpt34 = Button(text="KomOp34", padx="20", pady="8",command = click_btnKomOpt34)
+btnKomOpt34.place(x=560, y=5,height=30, width=50)
 btnKom39 = Button(text="Kom39", padx="20", pady="8",command = click_btnKom39)
-btnKom39.place(x=420, y=5,height=30, width=50)
+btnKom39.place(x=630, y=5,height=30, width=50)
 btnKomOpt39 = Button(text="KomOp39", padx="20", pady="8",command = click_btnKomOpt39)
-btnKomOpt39.place(x=490, y=5,height=30, width=50)
+btnKomOpt39.place(x=700, y=5,height=30, width=50)
 btnKom43 = Button(text="Kom43", padx="20", pady="8",command = click_btnKom43)
-btnKom43.place(x=560, y=5,height=30, width=50)
+btnKom43.place(x=770, y=5,height=30, width=50)
 btnLogin = Button(text="Login", padx="20", pady="18",command = click_btnLogin)
-btnLogin.place(x=660, y=5,height=30, width=50)
+btnLogin.place(x=870, y=5,height=30, width=50)
 
 labelIP = Label(root,text = "IP")
 labelIP.place(x=10, y=40)
